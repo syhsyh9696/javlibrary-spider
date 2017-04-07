@@ -7,10 +7,15 @@ def download_thread(filename)
     File.open("./download_thread/#{filename}.txt", "r") do |io|
         while line = io.gets
             code, name = line.chomp!.split
-            firsturl = "http://www.javlibrary.com/ja/vl_star.php?s=#{code}"
-            baseurl = "http://www.javlibrary.com/ja/vl_star.php?&mode=&s=#{code}&page="
+            firsturl = "http://www.jav11b.com/ja/vl_star.php?s=#{code}"
+            baseurl = "http://www.jav11b.com/ja/vl_star.php?&mode=&s=#{code}&page="
+
+            begin
+                response = RestClient.get firsturl
+            rescue
+                retry
+            end
             
-            response = RestClient.get firsturl
             doc = Nokogiri::HTML(response.body)
             
             last_page = 1
@@ -24,7 +29,7 @@ def download_thread(filename)
                 tempurl = baseurl + page.to_s
                 response = RestClient.get tempurl
                 Nokogiri::HTML(response.body).search('//div[@class="video"]/a').each do |row|
-                    text << row['title'] << "\n"
+                    text << row['href'].split("=")[-1] << " " << row['title'] << "\n"
                 end
             end
             
