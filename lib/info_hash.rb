@@ -9,6 +9,7 @@ module Javlibrary
         client.query("SELECT * FROM actor").each do |item|
             actor_hash["#{item['actor_name']}"] = item['actor_id']
         end
+        client.close
 
         actor_hash
     end
@@ -19,6 +20,7 @@ module Javlibrary
         client.query("SELECT * FROM category").each do |item|
             category_hash["#{item['category_name']}"] = item['category_id']
         end
+        client.close
 
         category_hash
     end

@@ -6,8 +6,8 @@ require 'mysql2'
 require 'redis'
 require 'pp'
 
+require_relative 'database'
 
-require_relative 'downloader.rb'
 
 module Javlibrary
     def Javlibrary.download_video_label(actor_id)
@@ -47,13 +47,11 @@ module Javlibrary
                 next
             end
         end
+        client.close
     end
 
     def Javlibrary.select_actor(type)
-        client = Mysql2::Client.new(:host => "127.0.0.1",
-                                    :username => "root",
-                                    :password => "XuHefeng",
-                                    :database => "javlibrary_new")
+        client = Javlibrary.client
         result = client.query("SELECT actor_label FROM actor WHERE type='#{type}'")
         client.close
 
@@ -71,6 +69,10 @@ module Javlibrary
             thread_pool << thread_temp
         end
         thread_pool.map(&:join)
+    end
+
+    def download_all_video_info
+
     end
 
     module_function :download_all_video_label

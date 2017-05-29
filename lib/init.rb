@@ -4,6 +4,8 @@ require 'mechanize'
 require 'nokogiri'
 require 'mysql2'
 
+require_relative 'database'
+
 module Javlibrary
     def Javlibrary.genres
         response = Mechanize.new; genres = Array.new
@@ -22,9 +24,12 @@ module Javlibrary
     def genres_insert
         client = Javlibrary.client
         genres = genres()
-        pp genres
         genres.each do |e|
-            client.query("INSERT INTO category (category_name) VALUES ('#{e}')")
+            begin
+                client.query("INSERT INTO category (category_name) VALUES ('#{e}')")
+            rescue
+                next
+            end
         end
 
         client.close

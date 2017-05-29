@@ -4,6 +4,8 @@ require 'rest-client'
 require 'nokogiri'
 require 'mysql2'
 
+require_relative 'database.rb'
+
 module Javlibrary
     def Javlibrary.author_page_num(nokogiri_doc)
         last_page = 1
@@ -41,6 +43,8 @@ module Javlibrary
                 end
             end
         end
+
+        client.close
     end
 
     module_function :get_all_actor
